@@ -469,7 +469,7 @@ const App = () => {
               // CONTACT SECTION
               <motion.div key={section.id} variants={staggerContainer} initial="initial" whileInView="whileInView" viewport={{ once: true }} className="container mx-auto p-6 md:p-12 bg-white rounded-xl shadow-lg relative z-10 lg:flex lg:gap-16">
                 {/* Left Section (Contact Info) - MODIFIED FOR BLUE BACKGROUND AND WHITE TEXT */}
-              <div className="flex-1 flex flex-col items-center text-center space-y-6 bg-blue-600 text-white rounded-lg p-10 
+              <div className="flex-1 flex flex-col items-center text-center space-y-8 bg-blue-600 text-white rounded-lg p-10 
               lg:items-start lg:text-left">                  
                 <h2 className="text-4xl font-extrabold text-white">Contact Us</h2> {/* Changed to white */}
                   <p className="text-gray-200 text-lg">
@@ -479,8 +479,8 @@ const App = () => {
                     <Mail className="h-5 w-5 text-white" /> {/* Icon changed to white */}
                     <div>
                       <p className="font-semibold">Email:</p>
-                      <a href="mailto:hello@example.com" className="text-blue-100 hover:underline"> {/* Link changed to light blue for contrast */}
-                        hello@example.com
+                      <a href="mailto:Info@newchemi.com" className="text-blue-100 hover:underline"> {/* Link changed to light blue for contrast */}
+                        Info@newchemi.com
                       </a>
                     </div>
                   </div>
@@ -488,18 +488,14 @@ const App = () => {
                     <Phone className="h-5 w-5 text-white" /> {/* Icon changed to white */}
                     <div>
                       <p className="font-semibold">Phone:</p>
-                      <a href="tel:+1234567890" className="text-blue-100 hover:underline"> {/* Link changed to light blue for contrast */}
-                        +1 (234) 567-890
-                      </a>
-                    </div>
-                  </div>
-                  <div className="text-white flex items-center space-x-3"> {/* Changed to white */}
-                    <MapPin className="h-5 w-5 text-white" /> {/* Icon changed to white */}
-                    <div>
-                      <p className="font-semibold">Address:</p>
-                      <p className="text-blue-100"> {/* Changed to light blue for contrast */}
-                        123 Chemical Lane, <br />Science City, SC 45678
-                      </p>
+                      <div className='flex flex-col'>
+                        <a href="tel:+972528034158" className="text-blue-100 hover:underline"> {/* Link changed to light blue for contrast */}
+                          +972 52-803-4158
+                        </a>
+                        <a href="tel:+972543373301" className="text-blue-100 hover:underline"> {/* Link changed to light blue for contrast */}
+                          +972 54-337-3301
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </div>
