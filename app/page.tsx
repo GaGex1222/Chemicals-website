@@ -65,7 +65,6 @@ const App = () => {
         },
       })
 
-      const data = await res.json()
       if (res.ok) {
         // Condition for successful submission (HTTP status 200-299)
         setSubmissionStatus({ status: 'success', message: 'Thank you! Your email was sent successfully.' });
@@ -473,8 +472,8 @@ const App = () => {
               <div className="flex-1 flex flex-col items-center text-center space-y-6 bg-blue-600 text-white rounded-lg p-10 
               lg:items-start lg:text-left">                  
                 <h2 className="text-4xl font-extrabold text-white">Contact Us</h2> {/* Changed to white */}
-                  <p className="text-gray-200 text-lg"> {/* Changed to light gray for contrast */}
-                    We'd love to hear from you. Drop us a message and we'll get back to you as soon as possible.
+                  <p className="text-gray-200 text-lg">
+                    We&apos;d love to hear from you. Drop us a message and we&apos;ll get back to you as soon as possible.
                   </p>
                   <div className="text-white flex items-center space-x-3"> {/* Changed to white */}
                     <Mail className="h-5 w-5 text-white" /> {/* Icon changed to white */}
