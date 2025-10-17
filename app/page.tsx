@@ -244,33 +244,56 @@ const App = () => {
 
   return (
     <div className="relative overflow-hidden w-screen h-screen font-sans">
-      <motion.nav
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ type: "spring", stiffness: 120, damping: 14 }}
-        className="fixed top-0 left-0 w-full z-20 rounded-b-xl bg-transparent bg-opacity-90"
-      >
-        <div className="container mx-auto px-4 py-3 flex justify-between items-center flex-wrap">
-          <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.5, duration: 0.5 }} className="flex items-center">
-            <img src="logo.png" alt="Logo" className="h-10 md:h-14" />
-          </motion.div>
-          <motion.div variants={staggerContainer} initial="initial" animate="animate" className="flex justify-center items-center space-x-2 md:space-x-8 mt-2 md:mt-0">
-            {sections.map((section: Section, index: number) => (
-              <motion.button
-                key={section.id}
-                variants={navItemVariants}
-                className={`flex items-center space-x-1 md:space-x-2 text-sm md:text-lg font-medium transition-colors duration-300 rounded-full px-2 md:px-4 py-1 md:py-2 
-                  ${activeSection === index ? 'text-blue-600' : 'text-gray-800 hover:text-blue-500'}`}
-                onClick={() => handleNavigationClick(index)}
-              >
-                {<section.icon className="h-4 w-4 md:h-5 md:w-5" />}
-                <span className="hidden md:inline">{section.title}</span>
-              </motion.button>
-            ))}
-          </motion.div>
-        </div>
-      </motion.nav>
+        <motion.nav
+          initial={{ y: -100 }}
+          animate={{ y: 0 }}
+          transition={{ type: "spring", stiffness: 120, damping: 14 }}
+          className="fixed top-0 left-0 w-full z-20 rounded-b-xl bg-transparent bg-opacity-90"
+        >
+          <div className="container mx-auto px-4 py-3 flex justify-between items-center flex-wrap">
+            
+            {/* Logo */}
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.5, duration: 0.5 }}
+              className="flex items-center"
+            >
+              <img src="logo.png" alt="Logo" className="h-10 md:h-14" />
+            </motion.div>
 
+            {/* Navigation */}
+            <motion.div
+              variants={staggerContainer}
+              initial="initial"
+              animate="animate"
+              className="flex justify-center items-center space-x-4 md:space-x-8 mt-2 md:mt-0"
+            >
+              {sections.map((section: Section, index: number) => (
+                <motion.button
+                  key={section.id}
+                  variants={navItemVariants}
+                  onClick={() => handleNavigationClick(index)}
+                  className={`flex flex-col md:flex-row items-center 
+                    text-gray-800 hover:text-blue-500 transition-colors duration-300 rounded-full 
+                    px-2 md:px-4 py-1 md:py-2
+                    ${activeSection === index ? 'text-blue-600' : ''}`}
+                >
+                  {/* Icon */}
+                  <section.icon className="h-6 w-6 md:h-5 md:w-5" />
+                  
+                  {/* Label — hidden on desktop, visible under icon on mobile */}
+                  <span className="text-xs mt-1 md:hidden">{section.title}</span>
+
+                  {/* Label — inline next to icon on desktop */}
+                  <span className="hidden md:inline md:ml-2 text-sm md:text-lg font-medium">
+                    {section.title}
+                  </span>
+                </motion.button>
+              ))}
+            </motion.div>
+          </div>
+        </motion.nav>
       <div className={`w-screen h-screen ${isMobile ? 'overflow-y-auto' : ''}`}>
         {sections.map((section: Section, index: number) => (
           <div
@@ -296,7 +319,13 @@ const App = () => {
             )}
 
             {section.id === 'home' ? (
-              <motion.div variants={staggerContainer} initial="initial" whileInView="whileInView" viewport={{ once: true }} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 lg:left-1/4 transition-all duration-500 rounded-xl p-4 lg:p-12 text-center lg:text-left z-10 text-gray-800 max-w-sm md:max-w-lg w-full">
+              <motion.div 
+                  variants={staggerContainer} 
+                  initial="initial" 
+                  whileInView="whileInView" 
+                  viewport={{ once: true }} 
+                  className="absolute bottom-0 right-0 transform translate-x-0 translate-y-0 lg:top-1/2 lg:left-1/4 lg:transform lg:-translate-x-1/2 lg:-translate-y-1/2 transition-all duration-500 rounded-xl p-4 lg:p-12 text-center lg:text-left z-10 text-gray-800 max-w-sm md:max-w-lg w-full"
+                >                
                 <motion.h1 variants={fadeIn} className="text-2xl md:text-4xl font-extrabold mb-2 md:mb-4 leading-tight">
                   NEWCHEM – Where Science Meets Sustainability
                 </motion.h1>
@@ -488,14 +517,9 @@ const App = () => {
                     <Phone className="h-5 w-5 text-white" /> {/* Icon changed to white */}
                     <div>
                       <p className="font-semibold">Phone:</p>
-                      <div className='flex flex-col'>
-                        <a href="tel:+972528034158" className="text-blue-100 hover:underline"> {/* Link changed to light blue for contrast */}
-                          +972 52-803-4158
-                        </a>
-                        <a href="tel:+972543373301" className="text-blue-100 hover:underline"> {/* Link changed to light blue for contrast */}
-                          +972 54-337-3301
-                        </a>
-                      </div>
+                      <a href="tel:+972543373301" className="text-blue-100 hover:underline"> {/* Link changed to light blue for contrast */}
+                        +972 54-337-3301
+                      </a>
                     </div>
                   </div>
                 </div>
