@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { Home, Users, Package, Mail, Book, Sparkle, Phone, MapPin, SprayCan, Beaker, Leaf, Dna, Shield, Droplets, Syringe, TreePine, ChevronRight, X } from 'lucide-react';
+import { Home, Users, Package, Mail, Book, Sparkle, Phone, MapPin, SprayCan, Beaker, Leaf, Dna, Shield, Droplets, Syringe, TreePine, ChevronRight, X, Menu } from 'lucide-react'; // Added Menu icon
 import { motion, Variants, AnimatePresence } from 'framer-motion';
 
 // Define the type for a Section object
@@ -36,6 +36,9 @@ const App = () => {
   // State to track if the current view is considered "mobile"
   const [isMobile, setIsMobile] = useState(false);
   const mobileBreakpoint = 768;
+
+  // NEW STATE for Mobile Menu
+  const [isMenuOpen, setIsMenuOpen] = useState(false); 
 
   const [fields, setFields] = useState({
     name: '',
@@ -78,7 +81,6 @@ const App = () => {
       console.log("Error occured when tried to fetch email api: ", e)
       setSubmissionStatus({status: "error", message: "Network error occured while trying to contact us, try again later."})
     }
-
   }
 
   const handleFieldChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -157,8 +159,8 @@ const App = () => {
   // Effect for full-page scroll with mobile/sidebar logic
   useEffect(() => {
     const handleScroll = (event: WheelEvent) => {
-      // Disable auto-scroll logic on mobile or when the sidebar is open
-      if (isScrolling || selectedProduct || isMobile) return; 
+      // Disable auto-scroll logic on mobile, when sidebar/product sidebar is open
+      if (isScrolling || selectedProduct || isMobile || isMenuOpen) return; 
 
       const direction = event.deltaY > 0 ? 'down' : 'up';
       let newSection = activeSection;
@@ -187,11 +189,15 @@ const App = () => {
         clearTimeout(scrollTimeout.current);
       }
     };
-  }, [activeSection, sections.length, isScrolling, selectedProduct, isMobile]);
+  }, [activeSection, sections.length, isScrolling, selectedProduct, isMobile, isMenuOpen]); // Added isMenuOpen
 
   const handleNavigationClick = (index: number) => {
     setActiveSection(index);
     sectionRefs.current[index]?.scrollIntoView({ behavior: 'smooth' });
+    // Close the mobile menu after clicking
+    if (isMobile) {
+      setIsMenuOpen(false);
+    }
   };
   
   const handleProductClick = (product: Product) => {
@@ -200,6 +206,11 @@ const App = () => {
   
   const handleCloseSidebar = () => {
     setSelectedProduct(null);
+  };
+
+  // Mobile Menu Toggler
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
   };
 
   const staggerContainer: Variants = {
@@ -236,6 +247,11 @@ const App = () => {
     open: { x: 0, opacity: 1, transition: { duration: 0.5, ease: "easeInOut" } },
   };
   
+  const mobileMenuVariants: Variants = { // NEW VARIANTS for the mobile navigation sidebar
+    closed: { x: "100%", transition: { duration: 0.3, ease: "easeIn" } },
+    open: { x: 0, transition: { duration: 0.3, ease: "easeOut" } },
+  };
+
   const backdropVariants: Variants = {
     closed: { opacity: 0, transition: { duration: 0.3 } },
     open: { opacity: 1, transition: { duration: 0.3 } },
@@ -244,56 +260,106 @@ const App = () => {
 
   return (
     <div className="relative overflow-hidden w-screen h-screen font-sans">
-        <motion.nav
-          initial={{ y: -100 }}
-          animate={{ y: 0 }}
-          transition={{ type: "spring", stiffness: 120, damping: 14 }}
-          className="fixed top-0 left-0 w-full z-20 rounded-b-xl bg-transparent bg-opacity-90"
-        >
-          <div className="container mx-auto px-4 py-3 flex justify-between items-center flex-wrap">
-            
-            {/* Logo */}
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.5 }}
-              className="flex items-center"
-            >
-              <img src="logo.png" alt="Logo" className="h-10 md:h-14" />
-            </motion.div>
+      <motion.nav
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ type: "spring", stiffness: 120, damping: 14 }}
+        className="fixed top-0 left-0 w-full z-20 rounded-b-xl bg-white bg-opacity-90 shadow-md" // Added bg-white and shadow
+      >
+        <div className="container mx-auto px-4 py-3 flex justify-between items-center"> {/* Removed flex-wrap here */}
+          
+          {/* Logo */}
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.5, duration: 0.5 }}
+            // Keep desktop size on md:h-28, set mobile size to h-18
+            className="flex items-center w-auto md:w-auto" // Adjusted width handling
+          >
+            <img src="logo.png" alt="Logo" className="h-18 md:h-28" />
+          </motion.div>
 
-            {/* Navigation */}
-            <motion.div
-              variants={staggerContainer}
-              initial="initial"
-              animate="animate"
-              className="flex justify-center items-center space-x-4 md:space-x-8 mt-2 md:mt-0"
-            >
-              {sections.map((section: Section, index: number) => (
-                <motion.button
-                  key={section.id}
-                  variants={navItemVariants}
-                  onClick={() => handleNavigationClick(index)}
-                  className={`flex flex-col md:flex-row items-center 
-                    text-gray-800 hover:text-blue-500 transition-colors duration-300 rounded-full 
-                    px-2 md:px-4 py-1 md:py-2
-                    ${activeSection === index ? 'text-blue-600' : ''}`}
-                >
-                  {/* Icon */}
-                  <section.icon className="h-6 w-6 md:h-5 md:w-5" />
-                  
-                  {/* Label — hidden on desktop, visible under icon on mobile */}
-                  <span className="text-xs mt-1 md:hidden">{section.title}</span>
+          {/* Navigation - Desktop Only */}
+          <motion.div
+            variants={staggerContainer}
+            initial="initial"
+            animate="animate"
+            // Hides on mobile, shows on desktop
+            className="hidden md:flex justify-center items-center space-x-8 mt-2 md:mt-0"
+          >
+            {sections.map((section: Section, index: number) => (
+              <motion.button
+                key={section.id}
+                variants={navItemVariants}
+                onClick={() => handleNavigationClick(index)}
+                // Updated text-color to gray
+                className={`flex flex-col md:flex-row items-center text-gray-800 hover:text-blue-500 transition-colors duration-300 rounded-full px-2 md:px-4 py-1 md:py-2
+                  ${activeSection === index ? 'text-blue-600' : ''}`}
+              >
+                {/* Icon */}
+                <section.icon className="h-6 w-6 md:h-5 md:w-5" />
+                
+                {/* Label — inline next to icon on desktop */}
+                <span className="hidden md:inline md:ml-2 text-sm md:text-lg font-medium">
+                  {section.title}
+                </span>
+              </motion.button>
+            ))}
+          </motion.div>
 
-                  {/* Label — inline next to icon on desktop */}
-                  <span className="hidden md:inline md:ml-2 text-sm md:text-lg font-medium">
-                    {section.title}
-                  </span>
-                </motion.button>
-              ))}
+          {/* Mobile Menu Button - Mobile Only */}
+          <button 
+            onClick={toggleMenu} 
+            className="md:hidden text-gray-800 hover:text-blue-600 transition-colors p-2"
+            aria-label="Toggle navigation menu"
+          >
+            {isMenuOpen ? <X className="h-8 w-8" /> : <Menu className="h-8 w-8" />}
+          </button>
+        </div>
+      </motion.nav>
+
+      {/* Mobile Sidebar/Dropdown Menu */}
+      <AnimatePresence>
+        {isMenuOpen && isMobile && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              variants={backdropVariants}
+              initial="closed"
+              animate="open"
+              exit="closed"
+              className="fixed inset-0 bg-black bg-opacity-30 z-30" 
+              onClick={toggleMenu}
+            />
+
+            {/* Sidebar */}
+            <motion.div
+              variants={mobileMenuVariants}
+              initial="closed"
+              animate="open"
+              exit="closed"
+              className="fixed top-0 right-0 h-full w-64 bg-white shadow-xl z-40 p-6 flex flex-col pt-24"
+            >
+              <h3 className="text-xl font-bold text-gray-800 mb-6 border-b pb-2">Navigation</h3>
+              <div className="flex flex-col space-y-4">
+                {sections.map((section: Section, index: number) => (
+                  <motion.button
+                    key={section.id}
+                    onClick={() => handleNavigationClick(index)} // This also closes the menu
+                    className={`flex items-center space-x-3 p-3 rounded-lg text-lg font-medium transition-colors duration-300 w-full justify-start
+                      ${activeSection === index ? 'bg-blue-100 text-blue-600' : 'text-gray-800 hover:bg-gray-50 hover:text-blue-500'}`}
+                  >
+                    <section.icon className="h-6 w-6" />
+                    <span>{section.title}</span>
+                  </motion.button>
+                ))}
+              </div>
             </motion.div>
-          </div>
-        </motion.nav>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Main Content Sections */}
       <div className={`w-screen h-screen ${isMobile ? 'overflow-y-auto' : ''}`}>
         {sections.map((section: Section, index: number) => (
           <div
@@ -325,20 +391,20 @@ const App = () => {
                   whileInView="whileInView" 
                   viewport={{ once: true }} 
                   className="absolute bottom-0 right-0 transform translate-x-0 translate-y-0 lg:top-1/2 lg:left-1/4 lg:transform lg:-translate-x-1/2 lg:-translate-y-1/2 transition-all duration-500 rounded-xl p-4 lg:p-12 text-center lg:text-left z-10 text-gray-800 max-w-sm md:max-w-lg w-full"
-                >                
-                <motion.h1 variants={fadeIn} className="text-2xl md:text-4xl font-extrabold mb-2 md:mb-4 leading-tight">
-                  NEWCHEM – Where Science Meets Sustainability
-                </motion.h1>
-                <motion.p variants={fadeIn} className="text-sm md:text-lg leading-relaxed mb-4 md:mb-8">
-                  At NEWCHEM, we’re not just importing chemicals — we’re shaping the next generation of sustainable innovation.
-                </motion.p>
-                <motion.button
-                  variants={fadeIn}
-                  className="bg-transparent text-gray-800 font-bold border-b border-gray-800 hover:text-gray-600 hover:border-gray-600 transition-colors"
-                  onClick={() => handleNavigationClick(1)}
-                >
-                  Explore Now
-                </motion.button>
+                >                
+                  <motion.h1 variants={fadeIn} className="text-2xl md:text-4xl font-extrabold mb-2 md:mb-4 leading-tight">
+                    NEWCHEM – Where Science Meets Sustainability
+                  </motion.h1>
+                  <motion.p variants={fadeIn} className="text-sm md:text-lg leading-relaxed mb-4 md:mb-8">
+                    At NEWCHEM, we’re not just importing chemicals — we’re shaping the next generation of sustainable innovation.
+                  </motion.p>
+                  <motion.button
+                    variants={fadeIn}
+                    className="bg-transparent text-gray-800 font-bold border-b border-gray-800 hover:text-gray-600 hover:border-gray-600 transition-colors"
+                    onClick={() => handleNavigationClick(1)}
+                  >
+                    Explore Now
+                  </motion.button>
               </motion.div>
             ) : section.id === 'about' ? (
               <motion.div
@@ -499,7 +565,7 @@ const App = () => {
               <motion.div key={section.id} variants={staggerContainer} initial="initial" whileInView="whileInView" viewport={{ once: true }} className="container mx-auto p-6 md:p-12 bg-white rounded-xl shadow-lg relative z-10 lg:flex lg:gap-16">
                 {/* Left Section (Contact Info) - MODIFIED FOR BLUE BACKGROUND AND WHITE TEXT */}
               <div className="flex-1 flex flex-col items-center text-center space-y-8 bg-blue-600 text-white rounded-lg p-10 
-              lg:items-start lg:text-left">                  
+              lg:items-start lg:text-left">                  
                 <h2 className="text-4xl font-extrabold text-white">Contact Us</h2> {/* Changed to white */}
                   <p className="text-gray-200 text-lg">
                     We&apos;d love to hear from you. Drop us a message and we&apos;ll get back to you as soon as possible.
@@ -555,8 +621,8 @@ const App = () => {
                         id="email"
                         name='email'
                         type="email"
-                        value={fields['email']}    
-                        onChange={handleFieldChange}                    
+                        value={fields['email']}    
+                        onChange={handleFieldChange}                    
                         placeholder="Your email address"
                         className="w-full p-3 bg-gray-50 border text-gray-800 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                       />
@@ -595,6 +661,7 @@ const App = () => {
         ))}
       </div>
 
+      {/* Desktop Scroll Indicator Dots (Keep hidden on mobile) */}
       <div className="fixed right-4 md:right-8 top-1/2 transform -translate-y-1/2 flex flex-col space-y-2 md:space-y-4 z-10 hidden md:flex">
         {sections.map((_, index: number) => (
           <motion.div
