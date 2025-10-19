@@ -264,7 +264,7 @@ const App = () => {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ type: "spring", stiffness: 120, damping: 14 }}
-        className="fixed top-0 left-0 w-full z-20 rounded-b-xl bg-white bg-opacity-90 shadow-md" // Added bg-white and shadow
+        className="fixed top-0 left-0 w-full z-20  bg-white xs:shadow-m md:bg-transparent" // Added bg-white and shadow
       >
         <div className="container mx-auto px-4 py-3 flex justify-between items-center"> {/* Removed flex-wrap here */}
           
@@ -293,8 +293,8 @@ const App = () => {
                 variants={navItemVariants}
                 onClick={() => handleNavigationClick(index)}
                 // Updated text-color to gray
-                className={`flex flex-col md:flex-row items-center text-gray-800 hover:text-blue-500 transition-colors duration-300 rounded-full px-2 md:px-4 py-1 md:py-2
-                  ${activeSection === index ? 'text-blue-600' : ''}`}
+                className={`flex flex-col md:flex-row items-center hover:text-blue-500 transition-colors duration-300 rounded-full px-2 md:px-4 py-1 md:py-2
+                  ${activeSection === index ? 'text-blue-600' : ''} ${activeSection == 0 ? "text-white" : "text-gray-800"}`}
               >
                 {/* Icon */}
                 <section.icon className="h-6 w-6 md:h-5 md:w-5" />
@@ -328,7 +328,7 @@ const App = () => {
               initial="closed"
               animate="open"
               exit="closed"
-              className="fixed inset-0 bg-black bg-opacity-30 z-30" 
+              className="fixed inset-0 backdrop-blur-md z-30" 
               onClick={toggleMenu}
             />
 
@@ -338,9 +338,9 @@ const App = () => {
               initial="closed"
               animate="open"
               exit="closed"
-              className="fixed top-0 right-0 h-full w-64 bg-white shadow-xl z-40 p-6 flex flex-col pt-24"
+              className="fixed top-0 right-0 h-full w-64 shadow-xl bg-white z-40 p-6 flex flex-col pt-24"
             >
-              <h3 className="text-xl font-bold text-gray-800 mb-6 border-b pb-2">Navigation</h3>
+              <h3 className="text-xl font-bold text-gray-800 mb-6 border-b pb-2">NewChem</h3>
               <div className="flex flex-col space-y-4">
                 {sections.map((section: Section, index: number) => (
                   <motion.button
@@ -392,15 +392,15 @@ const App = () => {
                   viewport={{ once: true }} 
                   className="absolute bottom-0 right-0 transform translate-x-0 translate-y-0 lg:top-1/2 lg:left-1/4 lg:transform lg:-translate-x-1/2 lg:-translate-y-1/2 transition-all duration-500 rounded-xl p-4 lg:p-12 text-center lg:text-left z-10 text-gray-800 max-w-sm md:max-w-lg w-full"
                 >                
-                  <motion.h1 variants={fadeIn} className="text-2xl md:text-4xl font-extrabold mb-2 md:mb-4 leading-tight">
+                  <motion.h1 variants={fadeIn} className="text-xl md:text-4xl font-extrabold text-white mb-2 md:mb-4 leading-tight">
                     NEWCHEM – Where Science Meets Sustainability
                   </motion.h1>
-                  <motion.p variants={fadeIn} className="text-sm md:text-lg leading-relaxed mb-4 md:mb-8">
+                  <motion.p variants={fadeIn} className="text-xs text-white md:text-lg leading-relaxed mb-4 md:mb-8">
                     At NEWCHEM, we’re not just importing chemicals — we’re shaping the next generation of sustainable innovation.
                   </motion.p>
                   <motion.button
                     variants={fadeIn}
-                    className="bg-transparent text-gray-800 font-bold border-b border-gray-800 hover:text-gray-600 hover:border-gray-600 transition-colors"
+                    className="bg-transparent text-gray-800 font-bold border-b text-white border-gray-800 hover:text-gray-600 hover:border-gray-600 transition-colors"
                     onClick={() => handleNavigationClick(1)}
                   >
                     Explore Now
