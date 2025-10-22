@@ -340,7 +340,7 @@ const App = () => {
               exit="closed"
               className="fixed top-0 right-0 h-full w-64 shadow-xl bg-white z-40 p-6 flex flex-col pt-24"
             >
-              <h3 className="text-xl font-bold text-gray-800 mb-6 border-b pb-2">NewChem</h3>
+              <h3 className="text-xl font-bold text-gray-800 mb-6 border-b pb-2">NewChemi</h3>
               <div className="flex flex-col space-y-4">
                 {sections.map((section: Section, index: number) => (
                   <motion.button
