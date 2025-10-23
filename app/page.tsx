@@ -276,7 +276,7 @@ const App = () => {
             // Keep desktop size on md:h-28, set mobile size to h-18
             className="flex items-center w-auto md:w-auto" // Adjusted width handling
           >
-            <img src="logo.png" alt="Logo" className="h-18 md:h-28" />
+            <img src="logo.png" alt="Logo" className="h-24 md:h-32" />
           </motion.div>
 
           {/* Navigation - Desktop Only */}
